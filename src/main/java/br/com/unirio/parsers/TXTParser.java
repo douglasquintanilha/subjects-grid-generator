@@ -10,11 +10,11 @@ import java.util.regex.Pattern;
 
 public class TXTParser {
 
-    public List<Subject> extract_subjects_from_txt(String parsed_pdf){
+    public List<Subject> extractSubjectsFromTxt(String parsed_pdf){
         List<Subject> subjects = new ArrayList<Subject>();
 
         String subject_code_regex = "(^[A-Z]{3}[0-9]{4})\\s";
-        String subject_name_regex = "(\\D*)\\s";
+        String subject_name_regex = "(\\D*[\\d]?)\\s";
         String subject_term_regex = "(\\d+)\\s";
         String subject_credits_regex = "(\\d+)\\s";
         String subject_grade_regex = "(\\d+,\\d+)\\s";
@@ -31,18 +31,30 @@ public class TXTParser {
 
         while (matcher.find()) {
 
-            String subject_code = matcher.group(1);
-            String subject_name = matcher.group(2);
-            String subject_term = matcher.group(3);
-            String subject_credits = matcher.group(4);
-            String subject_grade = matcher.group(5);
-            String subject_frequency = matcher.group(6);
-            String subject_situation = matcher.group(7);
+            String subject_code = sanitizeString(matcher.group(1));
+            String subject_name = sanitizeString(matcher.group(2));
+            String subject_term = sanitizeString(matcher.group(3));
+            String subject_credits = sanitizeString(matcher.group(4));
+            String subject_grade = sanitizeString(matcher.group(5));
+            String subject_frequency = sanitizeString(matcher.group(6));
+            String subject_situation = sanitizeString(matcher.group(7));
 
             Subject subject = new Subject(subject_code, subject_name, subject_term, subject_credits, subject_grade, subject_frequency, subject_situation);
             subjects.add(subject);
         }
         return subjects;
+    }
+
+    private String sanitizeString(String rawString){
+        String sanitezedString = rawString;
+        if(rawString != null){
+            String stringWithoutBreakingLines = rawString.replace("\n","");
+            String stringWithoutCarriageReturn = stringWithoutBreakingLines.replace("\r", "");
+            String trimmedString = stringWithoutCarriageReturn.trim();
+            sanitezedString = trimmedString;
+        }
+
+        return sanitezedString;
     }
 
 }
