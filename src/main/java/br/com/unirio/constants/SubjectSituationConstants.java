@@ -8,7 +8,7 @@ public enum SubjectSituationConstants {
     APPROVED_WITHOUT_GRADE("APV - Aprovado sem nota"),
     FAILED("RPV- Reprovado"),
     FAILED_TWO("REP - Reprovado por"),
-    FAILED_WITHOUT_GRADE("ASC - Reprovado sem nota "),
+    FAILED_WITHOUT_GRADE("ASC - Reprovado sem nota"),
     FAILED_FOR_LACK_OF_PRESENCE("REF - Reprovado por falta"),
     FREEZED("TRA - Trancamento de");
 
@@ -24,10 +24,11 @@ public enum SubjectSituationConstants {
 
     public static SubjectSituationConstants fromString(String text) {
         for (SubjectSituationConstants situation : SubjectSituationConstants.values()) {
-            if (situation.situationName.equalsIgnoreCase(text)) {
+            if (text.startsWith(situation.situationName)) {
                 return situation;
             }
         }
+
         throw new IllegalArgumentException("No constant with text " + text + " found");
     }
 

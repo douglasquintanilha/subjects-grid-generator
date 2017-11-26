@@ -30,7 +30,7 @@ public class App
         SVGParser svgParser = new SVGParser();
 
         Document grid = svgParser.parseSVG("files/grade-curricular.svg");
-        String parsed_txt = pdfParser.parsePdf("files/historico-descubra.pdf");
+        String parsed_txt = pdfParser.parsePdf("files/historico-cayo.pdf");
 
         List<Subject> subjects = txtParser.extractSubjectsFromTxt(parsed_txt);
         int printadas = 0;
