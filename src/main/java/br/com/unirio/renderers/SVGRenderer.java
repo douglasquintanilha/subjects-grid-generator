@@ -1,4 +1,4 @@
-package br.com.unirio.renders;
+package br.com.unirio.renderers;
 
 import br.com.unirio.constants.SubjectSituationConstants;
 import br.com.unirio.constants.SubjectTypeConstants;
@@ -14,7 +14,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 public class SVGRenderer {
@@ -72,6 +71,22 @@ public class SVGRenderer {
         return xpathExpression;
     }
 
+    public void printSVG(List<Subject> subjects, String outputFile, Document grid) throws TransformerException, XPathExpressionException {
+        for (Subject subject : subjects) {
+            if(this.shouldPrintGreen(subject)){
+                Document newGrid = this.updateSubjectColor(subject, ColorConstants.REPROVED_COLOR, grid);
+                this.drawGrid(newGrid, outputFile);
+            }else if(this.shouldPrintRed(subject)) {
+
+                Document newGrid = this.updateSubjectColor(subject, ColorConstants.APPROVED_COLOR, grid);
+                this.drawGrid(newGrid, outputFile);
+            }else if(this.shouldPrintYellow(subject)){
+                Document newGrid = this.updateSubjectColor(subject, ColorConstants.ENROLLMENT_COLOR, grid);
+                this.drawGrid(newGrid, outputFile);
+            }
+        }
+    }
+
     public boolean shouldPrintGreen(Subject subject){
         if(subject.getSituation() == SubjectSituationConstants.FAILED ||
             subject.getSituation() == SubjectSituationConstants.FAILED_TWO ||
@@ -88,6 +103,14 @@ public class SVGRenderer {
             subject.getSituation() == SubjectSituationConstants.APPROVED_WITHOUT_GRADE ||
             subject.getSituation() == SubjectSituationConstants.DISPENSED_WITHOUT_GRADE ||
             subject.getSituation() == SubjectSituationConstants.DISPENSED_WITH_GRADE){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean shouldPrintYellow(Subject subject){
+        if(subject.getSituation() == SubjectSituationConstants.ENROLLMENT){
             return true;
         }else{
             return false;
