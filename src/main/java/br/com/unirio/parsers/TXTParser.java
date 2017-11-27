@@ -1,6 +1,7 @@
 package br.com.unirio.parsers;
 
 import br.com.unirio.models.Subject;
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,24 @@ public class TXTParser {
             subjects.add(subject);
         }
         return subjects;
+    }
+
+    public String extractStudentName(String parsed_pdf){
+        String student_name_regex = "Nome Aluno:\\s(.*)";
+        Pattern student_pattern = Pattern.compile(student_name_regex);
+        Matcher matcher = student_pattern.matcher(parsed_pdf);
+        matcher.find();
+        String studentName = matcher.group(1);
+        return sanitizeString(studentName);
+    }
+
+    public String extractStudentCRA(String parsed_pdf){
+        String student_CRA_regex = "Coeficiente de Rendimento Geral:\\s(\\d+,\\d+)";
+        Pattern student_CRA_pattern = Pattern.compile(student_CRA_regex);
+        Matcher matcher = student_CRA_pattern.matcher(parsed_pdf);
+        matcher.find();
+        String studentCRA = matcher.group(1);
+        return sanitizeString(studentCRA);
     }
 
     private String sanitizeString(String rawString){

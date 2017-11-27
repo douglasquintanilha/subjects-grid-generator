@@ -1,5 +1,7 @@
 package br.com.unirio;
 
+import br.com.unirio.builders.StudentBuilder;
+import br.com.unirio.models.Student;
 import br.com.unirio.models.Subject;
 import br.com.unirio.parsers.PDFParser;
 import br.com.unirio.parsers.SVGParser;
@@ -40,14 +42,17 @@ public class App
         SVGParser svgParser = new SVGParser();
 
         Document grid = svgParser.parseSVG("files/grade-curricular.svg");
-        String parsed_txt = pdfParser.parsePdf("files/historico-douglas.pdf");
+        String parsed_pdf = pdfParser.parsePdf("files/historico-cayo.pdf");
 
-        List<Subject> subjects = txtParser.extractSubjectsFromTxt(parsed_txt);
-
+        List<Subject> subjects = txtParser.extractSubjectsFromTxt(parsed_pdf);
+        Student student = StudentBuilder.build(txtParser.extractStudentName(parsed_pdf), txtParser.extractStudentCRA(parsed_pdf), subjects);
         svgRenderer.printSVG(subjects, "files/output.svg" , grid);
 
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put("name", "Douglas");
+        context.put("name", student.getName());
+        context.put("cra", student.getCRA());
+        context.put("checkEnrollement", student.isEnrolledInAtLeastThreeSubjects());
+        context.put("shouldBeExpelled", student.shouldBeExpelled());
         templateRenderer.renderTemplate(context);
 
     }

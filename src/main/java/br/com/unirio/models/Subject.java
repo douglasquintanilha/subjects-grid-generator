@@ -71,6 +71,28 @@ public class Subject {
         }
     }
 
+    public boolean hasFailed(){
+        if(this.getSituation() == SubjectSituationConstants.FAILED ||
+                this.getSituation() == SubjectSituationConstants.FAILED_TWO ||
+                this.getSituation() == SubjectSituationConstants.FAILED_WITHOUT_GRADE ||
+                this.getSituation() == SubjectSituationConstants.FAILED_FOR_LACK_OF_PRESENCE){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean isApproved(){
+        if(this.getSituation() == SubjectSituationConstants.APPROVED ||
+                this.getSituation() == SubjectSituationConstants.APPROVED_WITHOUT_GRADE ||
+                this.getSituation() == SubjectSituationConstants.DISPENSED_WITHOUT_GRADE ||
+                this.getSituation() == SubjectSituationConstants.DISPENSED_WITH_GRADE){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         return "Subject{" +

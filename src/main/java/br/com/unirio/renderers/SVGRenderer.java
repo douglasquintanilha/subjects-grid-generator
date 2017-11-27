@@ -73,10 +73,10 @@ public class SVGRenderer {
 
     public void printSVG(List<Subject> subjects, String outputFile, Document grid) throws TransformerException, XPathExpressionException {
         for (Subject subject : subjects) {
-            if(this.shouldPrintGreen(subject)){
+            if(this.shouldPrintRed(subject)){
                 Document newGrid = this.updateSubjectColor(subject, ColorConstants.REPROVED_COLOR, grid);
                 this.drawGrid(newGrid, outputFile);
-            }else if(this.shouldPrintRed(subject)) {
+            }else if(this.shouldPrintGreen(subject)) {
 
                 Document newGrid = this.updateSubjectColor(subject, ColorConstants.APPROVED_COLOR, grid);
                 this.drawGrid(newGrid, outputFile);
@@ -88,10 +88,7 @@ public class SVGRenderer {
     }
 
     public boolean shouldPrintGreen(Subject subject){
-        if(subject.getSituation() == SubjectSituationConstants.FAILED ||
-            subject.getSituation() == SubjectSituationConstants.FAILED_TWO ||
-            subject.getSituation() == SubjectSituationConstants.FAILED_WITHOUT_GRADE ||
-            subject.getSituation() == SubjectSituationConstants.FAILED_FOR_LACK_OF_PRESENCE){
+        if(subject.isApproved()){
             return true;
         }else{
             return false;
@@ -99,10 +96,7 @@ public class SVGRenderer {
     }
 
     public boolean shouldPrintRed(Subject subject){
-        if(subject.getSituation() == SubjectSituationConstants.APPROVED ||
-            subject.getSituation() == SubjectSituationConstants.APPROVED_WITHOUT_GRADE ||
-            subject.getSituation() == SubjectSituationConstants.DISPENSED_WITHOUT_GRADE ||
-            subject.getSituation() == SubjectSituationConstants.DISPENSED_WITH_GRADE){
+        if(subject.hasFailed()){
             return true;
         }else{
             return false;

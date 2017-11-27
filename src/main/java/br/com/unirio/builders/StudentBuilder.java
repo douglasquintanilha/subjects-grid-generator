@@ -9,7 +9,8 @@ import java.util.List;
 
 public class StudentBuilder {
 
-    public Student build(String name, String CRA, List<Subject> subjects){
+
+    public static Student build(String name, String CRA, List<Subject> subjects){
         List<Subject> requiredSubjects = new ArrayList<Subject>();
         List<Subject> optionalSubjects = new ArrayList<Subject>();
         List<Subject> electiveSubjects = new ArrayList<Subject>();
