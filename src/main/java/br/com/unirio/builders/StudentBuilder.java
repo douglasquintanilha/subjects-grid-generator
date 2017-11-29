@@ -10,7 +10,7 @@ import java.util.List;
 public class StudentBuilder {
 
 
-    public static Student build(String name, String CRA, List<Subject> subjects){
+    public static Student build(String name, String CRA, String currentTerm, String firstYear, List<Subject> subjects){
         List<Subject> requiredSubjects = new ArrayList<Subject>();
         List<Subject> optionalSubjects = new ArrayList<Subject>();
         List<Subject> electiveSubjects = new ArrayList<Subject>();
@@ -28,7 +28,7 @@ public class StudentBuilder {
             }
         }
 
-        Student student = new Student(name, CRA, requiredSubjects, optionalSubjects, electiveSubjects, complementarySubjects);
+        Student student = new Student(name, CRA, currentTerm, firstYear, requiredSubjects, optionalSubjects, electiveSubjects, complementarySubjects);
         return student;
 
     }

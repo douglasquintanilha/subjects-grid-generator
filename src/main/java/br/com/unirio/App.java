@@ -44,14 +44,19 @@ public class App
         Document grid = svgParser.parseSVG("files/grade-curricular.svg");
         String parsed_pdf = pdfParser.parsePdf("files/historico-descubra.pdf");
 
+        System.out.println(parsed_pdf);
+
         List<Subject> subjects = txtParser.extractSubjectsFromTxt(parsed_pdf);
-        Student student = StudentBuilder.build(txtParser.extractStudentName(parsed_pdf), txtParser.extractStudentCRA(parsed_pdf), subjects);
+        Student student = StudentBuilder.build(txtParser.extractStudentName(parsed_pdf), txtParser.extractStudentCRA(parsed_pdf),
+                                                txtParser.extractStudentCurrentTerm(parsed_pdf), txtParser.extractStudentFirstYear(parsed_pdf),
+                subjects);
         svgRenderer.printSVG(subjects, "files/output.svg" , grid);
 
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         context.put("name", student.getName());
         context.put("cra", student.getCRA());
         context.put("checkEnrollement", student.isEnrolledInAtLeastThreeSubjects());
+        context.put("shouldPresentIntegralizationPlan", student.shouldPresentIntegralizationPlan());
         context.put("shouldBeExpelled", student.shouldBeExpelled());
         templateRenderer.renderTemplate(context);
 

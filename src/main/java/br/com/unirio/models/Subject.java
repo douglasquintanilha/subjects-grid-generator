@@ -105,4 +105,27 @@ public class Subject {
                 ", situation='" + situation + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!Subject.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Subject other = (Subject) obj;
+        if(this.code == other.code){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.code != null ? this.code.hashCode() : 0);
+        return hash;
+    }
 }

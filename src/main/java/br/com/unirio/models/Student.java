@@ -1,7 +1,10 @@
 package br.com.unirio.models;
 
 import br.com.unirio.constants.SubjectSituationConstants;
+import br.com.unirio.utils.StringSanitezer;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,25 +14,24 @@ public class Student {
 
     private String name;
     private Float CRA;
+    private int currentTerm;
+    private LocalDate firstYear;
     private List<Subject> requiredSubjects;
     private List<Subject> optionalSubjects;
     private List<Subject> electiveSubjects;
     private List<Subject> complementarySubjects;
 
-    public Student(String name, String CRA, List<Subject> requiredSubjects, List<Subject> optionalSubjects, List<Subject> electiveSubjects, List<Subject> complementarySubjects) {
+    public Student(String name, String CRA, String currentTerm, String firstYear, List<Subject> requiredSubjects, List<Subject> optionalSubjects, List<Subject> electiveSubjects, List<Subject> complementarySubjects) {
         this.name = name;
-        this.CRA = sanitizeCRA(CRA);
+        this.CRA = StringSanitezer.sanitizeCRA(CRA);
+        this.currentTerm = Integer.parseInt(currentTerm);
+        this.firstYear = LocalDate.of(Integer.parseInt(firstYear), Month.FEBRUARY, 1);
         this.requiredSubjects = requiredSubjects;
         this.optionalSubjects = optionalSubjects;
         this.electiveSubjects = electiveSubjects;
         this.complementarySubjects = complementarySubjects;
     }
 
-    private Float sanitizeCRA(String CRA){
-        String dotCRA = CRA.replace(",", ".");
-        Float floatCRA = Float.parseFloat(dotCRA);
-        return floatCRA;
-    }
 
     public String getName() {
         return name;
@@ -61,7 +63,7 @@ public class Student {
         int enrolledElectiveSubjects = checkNumberOfEnrollenmentSubjects(this.electiveSubjects);
         int enrolledComplementarySubjects = checkNumberOfEnrollenmentSubjects(this.complementarySubjects);
 
-        if(enrolledComplementarySubjects + enrolledOptionalSubjects
+        if(enrolledRequiredSubjects + enrolledOptionalSubjects
             + enrolledElectiveSubjects + enrolledComplementarySubjects >= 3){
             return true;
         }else{
@@ -69,7 +71,7 @@ public class Student {
         }
     }
 
-    private int checkNumberOfEnrollenmentSubjects(List<Subject> subjects){
+    public int checkNumberOfEnrollenmentSubjects(List<Subject> subjects){
         int enrolledSubjects = 0;
         for (Subject subject: subjects){
             if(subject.getSituation() == SubjectSituationConstants.ENROLLMENT){
@@ -97,15 +99,14 @@ public class Student {
 
     }
 
-    private boolean checkForQuadrupleFailedSubjects(List<Subject> subjects){
-        List<Subject> quadrupleFailedSubjects = new ArrayList<Subject>();
+    public boolean checkForQuadrupleFailedSubjects(List<Subject> subjects){
         Map<Subject,Integer> subjectsFailures = new HashMap<Subject, Integer>();
         for (Subject subject: subjects){
             if(subject.hasFailed()){
                 if(subjectsFailures.containsKey(subject)) {
                     subjectsFailures.put(subject, subjectsFailures.get(subject) + 1);
                 }else {
-                     subjectsFailures.put(subject, 0);
+                     subjectsFailures.put(subject, 1);
                 }
             }
         }
@@ -116,6 +117,21 @@ public class Student {
             }
         }
 
+        return false;
+    }
+
+    public boolean shouldPresentIntegralizationPlan() {
+        if(this.firstYear.isBefore(LocalDate.of(2014,1,1))){
+            if(this.currentTerm >= 12){
+                return true;
+            }
+        }else if (this.firstYear.isAfter(LocalDate.of(2014,1,1))){
+            if(this.currentTerm >= 7){
+                return true;
+            }else{
+                return false;
+            }
+        }
         return false;
     }
 }
