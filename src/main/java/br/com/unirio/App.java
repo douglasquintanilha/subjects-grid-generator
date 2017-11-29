@@ -42,7 +42,7 @@ public class App
         SVGParser svgParser = new SVGParser();
 
         Document grid = svgParser.parseSVG("files/grade-curricular.svg");
-        String parsed_pdf = pdfParser.parsePdf("files/historico-cayo.pdf");
+        String parsed_pdf = pdfParser.parsePdf("files/historico-descubra.pdf");
 
         List<Subject> subjects = txtParser.extractSubjectsFromTxt(parsed_pdf);
         Student student = StudentBuilder.build(txtParser.extractStudentName(parsed_pdf), txtParser.extractStudentCRA(parsed_pdf), subjects);

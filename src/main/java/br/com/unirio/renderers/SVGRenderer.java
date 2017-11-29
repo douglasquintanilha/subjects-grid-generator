@@ -56,14 +56,20 @@ public class SVGRenderer {
     private String getXpathExpression(Subject subject){
         String xpathExpression = "";
         if(subject.getType() == SubjectTypeConstants.OPTIONAL){
-            optativesAlreadyDrawn++;
+            if(subject.isApproved()){
+                optativesAlreadyDrawn++;
+            }
             xpathExpression = "//g/path[@id='OPTATIVA_0"+ optativesAlreadyDrawn + "']";
         }else if (subject.getType() == SubjectTypeConstants.ELECTIVE){
-            electiveAlreadyDrawn++;
+            if(subject.isApproved()) {
+                electiveAlreadyDrawn++;
+            }
             xpathExpression = "//g/path[@id='ELETIVA_0"+ electiveAlreadyDrawn  + "']";
         }else if (subject.getType() == SubjectTypeConstants.COMPLEMENTARY){
             xpathExpression = "//g/path[@id='TIN00"+ complementaryAlreadyDrawn  + "']";
-            complementaryAlreadyDrawn++;
+            if(subject.isApproved()) {
+                complementaryAlreadyDrawn++;
+            }
         }else{
             xpathExpression = "//g/path[@id='"+ subject.getCode() + "']";
         }
@@ -80,9 +86,6 @@ public class SVGRenderer {
 
                 Document newGrid = this.updateSubjectColor(subject, ColorConstants.APPROVED_COLOR, grid);
                 this.drawGrid(newGrid, outputFile);
-            }else if(this.shouldPrintYellow(subject)){
-                Document newGrid = this.updateSubjectColor(subject, ColorConstants.ENROLLMENT_COLOR, grid);
-                this.drawGrid(newGrid, outputFile);
             }
         }
     }
@@ -97,14 +100,6 @@ public class SVGRenderer {
 
     public boolean shouldPrintRed(Subject subject){
         if(subject.hasFailed()){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public boolean shouldPrintYellow(Subject subject){
-        if(subject.getSituation() == SubjectSituationConstants.ENROLLMENT){
             return true;
         }else{
             return false;
